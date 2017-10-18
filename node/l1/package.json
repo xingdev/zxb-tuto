@@ -1,0 +1,11 @@
+{
+  "name": "zxb-node",
+  "version": "1.0.1",
+  "main": "./lib/main.js",
+  "bin": {
+    "node-echo": "./bin/node-echo"
+  },
+  "dependencies": {
+    "argv": "0.0.2"
+  }
+}
