@@ -3,6 +3,9 @@
  */
 const express = require('..')
 const app = express()
-console.log(app)
-//app.listen('http://127.0.0.1:3000')
 
+app.listen(3000)
+
+app.get('/index', function (req, res) {
+  res.send('this is a test app')
+})
