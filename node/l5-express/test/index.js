@@ -6,6 +6,8 @@ const app = express()
 
 app.listen(3000)
 
-app.get('/index', function (req, res) {
+app.get('/demo', function showIndex (req, res) {
   res.send('this is a test app')
 })
+
+
