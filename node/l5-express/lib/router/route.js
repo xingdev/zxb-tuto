@@ -10,6 +10,7 @@ Route.prototype._handles_method = function (method) {
   var name = method.toLowerCase()
   return Boolean(this.methods[name])
 }
+
 http.METHODS.forEach(function (method) {
   method = method.toLowerCase()
   Route.prototype[method] = function (fn) {
