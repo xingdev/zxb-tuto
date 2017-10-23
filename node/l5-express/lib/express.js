@@ -7,4 +7,4 @@ function createApplication () {
   return app
 }
 
-exports = module.exports = createApplication
+module.exports = createApplication

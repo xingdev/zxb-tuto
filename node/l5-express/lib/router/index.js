@@ -1,7 +1,14 @@
 var Layer = require('./layer')
 var Route = require('./route')
 var Router = function () {
-  this.stack = []
+  this.stack = [
+    new Layer('*', function (req, res) {
+      res.writeHead(200, {
+        'Content-Type': 'text/plain'
+      })
+      res.end('404')
+    })
+  ]
 }
 
 Router.prototype.route = function (path) {

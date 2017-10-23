@@ -2,7 +2,7 @@
  * Created by xingbozhang on 2017/10/19.
  */
 const http = require('http')
-const Router = require('./router')
+const Router = require('./router/index')
 
 module.exports = {
   _router: new Router(),
@@ -12,7 +12,6 @@ module.exports = {
   listen: function (port, cb) {
     var self = this
     var server = http.createServer(function (req, res) {
-      // 定义result 的 render 函数
       if (!res.send) {
         res.send = function (body) {
           res.writeHead(200, {
@@ -21,7 +20,6 @@ module.exports = {
           res.end(body)
         }
       }
-
       return self._router.handle(req, res)
     })
 

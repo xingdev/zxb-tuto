@@ -1,5 +1,5 @@
 var Layer = require('./layer')
-
+var http = require('http')
 var Route = function (path) {
   this.path = path
   this.stack = []
@@ -8,20 +8,21 @@ var Route = function (path) {
 
 Route.prototype._handles_method = function (method) {
   var name = method.toLowerCase()
-  console.log(this.methods[name])
   return Boolean(this.methods[name])
 }
+http.forEach(function (method) {
+  method = method.toLowerCase()
+  Route.prototype[method] = function (fn) {
+    var layer = new Layer('/', fn)
+    layer.method = method
 
-Route.prototype.get = function (fn) {
-  var layer = new Layer('/', fn)
-  layer.method = 'get'
+    this.methods[method] = true
 
-  this.methods['get'] = true
+    this.stack.push(layer)
 
-  this.stack.push(layer)
-
-  return this
-}
+    return this
+  }
+})
 
 Route.prototype.dispatch = function (req, res) {
   var method = req.method.toLowerCase()
