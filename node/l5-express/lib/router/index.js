@@ -3,22 +3,13 @@ var Route = require('./route')
 const http = require('http')
 
 var Router = function () {
-  this.stack = [
-    new Layer('*', function (req, res) {
-      res.writeHead(200, {
-        'Content-Type': 'text/plain'
-      })
-      res.end('404')
-    })
-  ]
+  this.stack = []
 }
 
 Router.prototype.route = function (path) {
   var route = new Route(path)
 
-  var layer = new Layer(path, function (req, res) {
-    route.dispatch(req, res)
-  })
+  var layer = new Layer(path, route.dispatch.bind(route))
 
   layer.route = route
 
@@ -36,14 +27,32 @@ http.METHODS.forEach(function (method) {
   }
 })
 
-Router.prototype.handle = function (req, res) {
+Router.prototype.handle = function (req, res, done) {
   var method = req.method
-  this.stack.forEach(function (v) {
-    if (v.match(req.url) && v.route && v.route._handles_method(method)) {
-      return v.handle_request(req, res)
+  var idx = 0
+  var stack = this.stack
+
+  function next (err) {
+    var layerError = err === 'router' ? null : err
+    if (layerError === 'router') {
+      return done(null)
     }
-  })
-  return this.stack[0].handle_request && this.stack[0].handle_request(req, res)
+
+    if (idx >= stack.length || layerError) {
+      console.log(layerError)
+      return done(layerError)
+    }
+
+    var layer = stack[idx++]
+    if (layer.match(req.url) && layer.route && layer.route._handles_method(method)) {
+      console.log('aaaa')
+      layer.handle_request(req, res, next)
+    } else {
+      next(layerError)
+    }
+  }
+
+  next()
 }
 
 module.exports = Router

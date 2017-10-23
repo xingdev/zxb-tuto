@@ -26,8 +26,22 @@ Application.prototype.handle = function (req, res) {
       res.end(body)
     }
   }
+  var done = function finalHandler (err) {
+    res.writeHead(404, {
+      'Content-Type': 'text/plain'
+    })
+
+    if (err) {
+      res.end('404:' + err)
+    } else {
+      var msg = 'Cannot ' + req.method + ' ' + req.url
+      res.end(msg)
+    }
+  }
+
   var router = this._router
-  router.handle(req, res)
+
+  router.handle(req, res, done)
 }
 
 http.METHODS.forEach(function (method) {

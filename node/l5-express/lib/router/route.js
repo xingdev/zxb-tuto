@@ -25,14 +25,35 @@ http.METHODS.forEach(function (method) {
   }
 })
 
-Route.prototype.dispatch = function (req, res) {
+Route.prototype.dispatch = function (req, res, done) {
   var method = req.method.toLowerCase()
+  var idx = 0
+  var stack = this.stack
 
-  this.stack.forEach(function (layer) {
-    if (method === layer.method) {
-      return layer.handle_request(req, res)
+  function next (err) {
+    if (err && err === 'route') {
+      return done()
     }
-  })
+
+    if (err && err === 'router') {
+      return done(err)
+    }
+    if (idx >= stack.length) {
+      return done(err)
+    }
+    var layer = stack [idx++]
+    if (method !== layer.method) {
+      return next(err)
+    }
+    if (err) {
+      return done(err)
+    } else {
+      layer.handle_request(req, res, next)
+    }
+
+  }
+
+  next()
 }
 
 module.exports = Route

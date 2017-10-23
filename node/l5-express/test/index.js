@@ -4,20 +4,17 @@
 const express = require('..')
 const app = express()
 
-app.listen(3000)
-
-//app.put('/', function (req, res) {
-//  res.send('put Hello World!')
-//})
-
-app.get('/demo', function (req, res) {
-  res.send('get Hello World!')
+app.get('/', function (req, res, next) {
+  next()
 })
+  .get('/', function (req, res, next) {
+    next(new Error('error'))
+  })
+  .get('/', function (req, res) {
+    res.send('third')
+  })
 
-app.get('/demo2', function demo2 (req, res) {
-  res.send('get Hello World!')
-})
-app.put('/demo2', function demo2 (req, res) {
-  res.send('get Hello World!')
+app.listen(3000, function () {
+  console.log('Example app listening on port 3000!')
 })
 

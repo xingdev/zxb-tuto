@@ -8,10 +8,12 @@ Layer.prototype.match = function (path) {
   return path === this.path
 }
 
-Layer.prototype.handle_request = function (req, res) {
+Layer.prototype.handle_request = function (req, res, next) {
   var fn = this.handle
-  if (fn) {
-    return fn(req, res)
+  try {
+    fn(req, res, next)
+  } catch (err) {
+    next(err)
   }
 }
 
