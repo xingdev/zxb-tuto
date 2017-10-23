@@ -6,10 +6,11 @@ const app = express()
 
 app.listen(3000)
 
-app.get('/demo', function (req, res) {
-  res.send('this is a test app')
+app.put('/', function (req, res) {
+  res.send('put Hello World!')
 })
 
-app.post('/demo', function (req, res) {
-  res.send('post is a test app')
+app.get('/', function (req, res) {
+  res.send('get Hello World!')
 })
+

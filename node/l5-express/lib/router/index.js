@@ -1,5 +1,7 @@
 var Layer = require('./layer')
 var Route = require('./route')
+const http = require('http')
+
 var Router = function () {
   this.stack = [
     new Layer('*', function (req, res) {
@@ -25,11 +27,15 @@ Router.prototype.route = function (path) {
   return route
 }
 
-Router.prototype.get = function (path, fn) {
-  var route = this.route(path)
-  route.get(fn)
-  return this
-}
+http.METHODS.forEach(function(method) {
+  method = method.toLowerCase();
+  Router.prototype[method] = function(path, fn) {
+    var route = this.route(path);
+    route[method].call(route, fn);
+
+    return this;
+  };
+});
 
 Router.prototype.handle = function (req, res) {
   this.stack.forEach(function (v) {

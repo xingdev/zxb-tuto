@@ -1,10 +1,10 @@
 /**
  * Created by xingbozhang on 2017/10/19.
  */
-var app = require('./application')
+var Application = require('./application')
 
 function createApplication () {
-  return app
+  return new Application()
 }
 
 module.exports = createApplication
