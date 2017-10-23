@@ -1,0 +1,15 @@
+{
+  "name": "l5-express",
+  "version": "1.0.0",
+  "description": "[express 源码解析](https://segmentfault.com/a/1190000011090124)",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "start": "node ./test/index.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
