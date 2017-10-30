@@ -4,7 +4,7 @@
 var Application = require('./application')
 
 function createApplication () {
-  return new Application()
+  return Application
 }
 
 module.exports = createApplication

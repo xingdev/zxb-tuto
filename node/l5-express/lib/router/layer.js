@@ -1,20 +1,19 @@
-var Layer = function (path, fn) {
-  this.path = path
-  this.handle = fn
-  this.name = fn.name || '<anonymous>'
-}
+class Layer {
+  constructor (path, handle) {
+    this.path = path
+    this.handle = handle
+  }
 
-Layer.prototype.match = function (path) {
-  return path === this.path
-}
+  handle_request (req, res) {
+    var fn = this.handle
+    if (fn) {
+      fn(req, res)
+    }
+  }
 
-Layer.prototype.handle_request = function (req, res, next) {
-  var fn = this.handle
-  try {
-    fn(req, res, next)
-  } catch (err) {
-    next(err)
+  match (path) {
+    return path === this.path
   }
 }
 
-module.exports = Layer
+exports = module.exports = Layer

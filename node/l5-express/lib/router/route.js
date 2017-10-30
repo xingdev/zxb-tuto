@@ -1,59 +1,50 @@
+/**
+ * Created by xingbozhang on 2017/10/30.
+ */
+
+/***
+ Route = {
+   path:'/'
+   stacker:[
+    Layer:{
+    method: 'get',
+    handle: function
+    }
+   ],
+   methods:{
+     get:true
+  }
+}
+ ***/
 var Layer = require('./layer')
-var http = require('http')
-var Route = function (path) {
-  this.path = path
-  this.stack = []
-  this.methods = {}
-}
+class Route {
+  constructor (path) {
+    this.path = path
+    this.stack = []
+    this.methods = {}
+  }
 
-Route.prototype._handles_method = function (method) {
-  var name = method.toLowerCase()
-  return Boolean(this.methods[name])
-}
+  _handles_method (method) {
+    method = method.toLowerCase()
+    return Boolean(this.methods[method])
+  }
 
-http.METHODS.forEach(function (method) {
-  method = method.toLowerCase()
-  Route.prototype[method] = function (fn) {
+  get (fn) {
     var layer = new Layer('/', fn)
-    layer.method = method
-
-    this.methods[method] = true
-
+    layer.method = 'get'
+    this.methods['get'] = true
     this.stack.push(layer)
-
     return this
   }
-})
 
-Route.prototype.dispatch = function (req, res, done) {
-  var method = req.method.toLowerCase()
-  var idx = 0
-  var stack = this.stack
-
-  function next (err) {
-    if (err && err === 'route') {
-      return done()
-    }
-
-    if (err && err === 'router') {
-      return done(err)
-    }
-    if (idx >= stack.length) {
-      return done(err)
-    }
-    var layer = stack [idx++]
-    if (method !== layer.method) {
-      return next(err)
-    }
-    if (err) {
-      return done(err)
-    } else {
-      layer.handle_request(req, res, next)
-    }
-
+  dispatch (req, res) {
+    var method = req.method.toLowerCase()
+    this.stack.forEach(layer => {
+      if (method === layer.method) {
+        return layer.handle_request(req, res)
+      }
+    })
   }
-
-  next()
 }
 
-module.exports = Route
+exports = module.exports = Route
