@@ -13,6 +13,11 @@ class Router {
     ]
   }
 
+  /**
+   *
+   * @param path
+   * @returns {Route}
+   */
   route (path) {
     var route = new Route(path)
 
@@ -27,6 +32,12 @@ class Router {
     return route
   }
 
+  /**
+   *
+   * @param path
+   * @param handle
+   * @returns {Router}
+   */
   get (path, handle) {
     var route = this.route(path)
 
@@ -35,6 +46,12 @@ class Router {
     return this
   }
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {*}
+   */
   handle (req, res) {
     this.stack.forEach(layer => {
       if (layer.match(req.url)) {

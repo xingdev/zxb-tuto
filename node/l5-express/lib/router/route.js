@@ -17,6 +17,9 @@
 }
  ***/
 var Layer = require('./layer')
+/**
+ *
+ */
 class Route {
   constructor (path) {
     this.path = path
@@ -24,11 +27,22 @@ class Route {
     this.methods = {}
   }
 
+  /**
+   *
+   * @param method
+   * @returns {boolean}
+   * @private
+   */
   _handles_method (method) {
     method = method.toLowerCase()
     return Boolean(this.methods[method])
   }
 
+  /**
+   *
+   * @param fn
+   * @returns {Route}
+   */
   get (fn) {
     var layer = new Layer('/', fn)
     layer.method = 'get'
@@ -37,6 +51,11 @@ class Route {
     return this
   }
 
+  /**
+   *
+   * @param req
+   * @param res
+   */
   dispatch (req, res) {
     var method = req.method.toLowerCase()
     this.stack.forEach(layer => {

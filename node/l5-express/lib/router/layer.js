@@ -4,6 +4,11 @@ class Layer {
     this.handle = handle
   }
 
+  /**
+   *
+   * @param req
+   * @param res
+   */
   handle_request (req, res) {
     var fn = this.handle
     if (fn) {
@@ -11,6 +16,11 @@ class Layer {
     }
   }
 
+  /**
+   *
+   * @param path
+   * @returns {boolean}
+   */
   match (path) {
     return path === this.path
   }
