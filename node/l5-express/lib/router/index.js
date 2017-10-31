@@ -3,14 +3,10 @@
  */
 var Layer = require('./layer')
 var Route = require('./route')
+var http = require('http')
 class Router {
   constructor () {
-    this.stack = [
-      new Layer('*', function (req, res) {
-        res.writeHead(200, {'Content-Type': 'text/plain'})
-        res.end('404')
-      })
-    ]
+    this.stack = []
   }
 
   /**
@@ -21,9 +17,7 @@ class Router {
   route (path) {
     var route = new Route(path)
 
-    var layer = new Layer(path, function (req, res) {
-      route.dispatch(req, res)
-    })
+    var layer = new Layer(path, route.dispatch.bind(route))
 
     layer.route = route
 
@@ -34,32 +28,49 @@ class Router {
 
   /**
    *
-   * @param path
-   * @param handle
-   * @returns {Router}
-   */
-  get (path, handle) {
-    var route = this.route(path)
-
-    route.get(handle)
-
-    return this
-  }
-
-  /**
-   *
    * @param req
    * @param res
    * @returns {*}
    */
-  handle (req, res) {
-    this.stack.forEach(layer => {
-      if (layer.match(req.url)) {
-        return layer.handle_request(req, res)
+  handle (req, res, done) {
+
+    var self = this,
+      method = req.method,
+      idx = 0, stack = self.stack
+
+    function next (err) {
+      var layerError = (err === 'route' ? null : err)
+
+      //跳过路由系统
+      if (layerError === 'router') {
+        return done(null)
       }
-    })
-    return this.stack[0].handle_request(req, res)
+
+      if (idx >= stack.length || layerError) {
+        return done(layerError)
+      }
+
+      var layer = stack[idx++]
+      //匹配，执行
+      if (layer.match(req.url)) {
+        return layer.handle_request(req, res, next)
+      } else {
+        next(layerError)
+      }
+    }
+
+    next()
   }
 }
+
+http.METHODS.forEach(function (method) {
+  method = method.toLowerCase()
+  Router.prototype[method] = function (path, fn) {
+    var route = this.route(path)
+    route[method].call(route, fn)
+
+    return this
+  }
+})
 
 exports = module.exports = Router

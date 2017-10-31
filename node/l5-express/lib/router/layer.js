@@ -9,10 +9,12 @@ class Layer {
    * @param req
    * @param res
    */
-  handle_request (req, res) {
+  handle_request (req, res, next) {
     var fn = this.handle
-    if (fn) {
-      fn(req, res)
+    try {
+      fn(req, res, next)
+    } catch (err) {
+      next(err)
     }
   }
 
