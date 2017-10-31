@@ -46,5 +46,4 @@ module.exports = {
     }),
     new webpack.HotModuleReplacementPlugin()//热加载插件
   ],
-
 }
