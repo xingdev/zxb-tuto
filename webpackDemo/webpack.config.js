@@ -1,9 +1,27 @@
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const fs = require('fs')
+
+function getLessVariables (file) {
+  var themeContent = fs.readFileSync(file, 'utf-8')
+  var variables = {}
+  themeContent.split('\n').forEach(function (item) {
+    if (item.indexOf('//') > -1 || item.indexOf('/*') > -1) {
+      return
+    }
+    var _pair = item.split(':')
+    if (_pair.length < 2) return
+    var key = _pair[0].replace('\r', '').replace('@', '')
+    if (!key) return
+    var value = _pair[1].replace(';', '').replace('\r', '').replace(/^\s+|\s+$/g, '')
+    variables[key] = value
+  })
+  return variables
+}
 
 module.exports = {
   devtool: 'eval-source-map',
-  entry: __dirname + '/app/main.js',
+  entry: __dirname + '/app/index.js',
   output: {
     path: __dirname + '/public',
     filename: 'bundle.js'
@@ -49,9 +67,7 @@ module.exports = {
             loader: 'less-loader', // compiles Less to CSS
             options: {
               sourceMap: true,
-              modifyVars: {
-                'primary-color': '#cb3837'
-              }
+              modifyVars: getLessVariables('./app/theme/theme.less')
             }
           }
         ]

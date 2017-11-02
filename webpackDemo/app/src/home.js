@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import styles from './Greeter.less'
+import styles from './home.less'
 
 import { DatePicker, message, Button } from 'antd'
-class Greeter extends Component {
+class Home extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -23,5 +23,5 @@ class Greeter extends Component {
   }
 }
 
-export default Greeter
+export default Home
 
