@@ -1,5 +1,6 @@
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+
 module.exports = {
   devtool: 'eval-source-map',
   entry: __dirname + '/app/main.js',
@@ -17,7 +18,7 @@ module.exports = {
       {
         test: /(\.jsx|\.js)$/,
         use: {
-          loader: 'babel-loader'
+          loader: 'babel-loader',
         },
         exclude: /node_modules/
       },
@@ -34,9 +35,27 @@ module.exports = {
           },
           {
             loader: 'postcss-loader'
+          },
+        ]
+      },
+      {
+        test: /\.less$/,
+        use: [
+          {
+            loader: 'style-loader' // creates style nodes from JS strings
+          }, {
+            loader: 'css-loader' // translates CSS into CommonJS
+          }, {
+            loader: 'less-loader', // compiles Less to CSS
+            options: {
+              sourceMap: true,
+              modifyVars: {
+                'primary-color': '#cb3837'
+              }
+            }
           }
         ]
-      }
+      },
     ]
   },
   plugins: [
