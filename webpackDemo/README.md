@@ -1,4 +1,7 @@
-webpack入门[http://www.jianshu.com/p/42e11515c10f]
+1.[webpack入门](http://www.jianshu.com/p/42e11515c10f)
+2.[使用webpack+vue+less开发，使用less-loader，配置全局less变量](https://zhuanlan.zhihu.com/p/27439821)
+3.[How to Customize Ant Design with React & Webpack… the Missing Guide](https://medium.com/@GeoffMiller/how-to-customize-ant-design-with-react-webpack-the-missing-guide-c6430f2db10f)
+
 
 搭载react环境
 ###
