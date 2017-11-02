@@ -43,6 +43,20 @@ class Application {
     return server.listen.apply(server, arguments)
   }
 
+  use (fn) {
+    var path = '/'
+    var router = this._router
+
+    //todo 路径挂载
+    if (typeof fn !== 'function') {
+      path = fn
+      fn = arguments[1]
+    }
+    router.use(path, fn)
+
+    return this
+  }
+
 }
 
 http.METHODS.forEach(function (method) {

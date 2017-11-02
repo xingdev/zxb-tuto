@@ -4,17 +4,27 @@
 const express = require('..')
 const app = express()
 
-app.get('/', function (req, res, next) {
+const router = express.Router()
+
+app.use(function (req, res, next) {
+  console.log('Time：', Date.now())
   next()
 })
 
-  .get('/', function (req, res, next) {
-    next(new Error('error'))
-  })
+app.get('/', function (req, res, next) {
+  res.send('first')
+})
 
-  .get('/', function (req, res) {
-    res.send('third')
-  })
+router.use(function (req, res, next) {
+  console.log('Time: ', Date.now())
+  next()
+})
+
+router.use('/', function (req, res, next) {
+  res.send('second')
+})
+
+app.use('/user', router)
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')

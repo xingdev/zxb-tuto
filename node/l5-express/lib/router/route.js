@@ -1,7 +1,7 @@
 /**
  * Created by xingbozhang on 2017/10/30.
  */
-
+var proto = {}
 /***
  Route = {
    path:'/'
